@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Production Tracker</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <header>
+      <h1>Production Tracker</h1>
+      <button id="refreshBtn" title="Refresh">↻</button>
+    </header>
+
+    <div id="status-bar">
+      <span id="sync-label">Connecting…</span>
+    </div>
+
+    <div id="project-list">
+      <p class="placeholder">Loading projects…</p>
+    </div>
+
+    <section id="render-section">
+      <h2>After Effects — Render Queue</h2>
+      <button id="renderBtn">Start Render</button>
+      <p id="render-msg"></p>
+    </section>
+
+  </div>
+
+  <!--
+    CSInterface.js is not included in this repo — copy it from Adobe's CEP Resources:
+    https://github.com/Adobe-CEP/CEP-Resources/blob/master/CEP_11.x/CSInterface.js
+    Place it at: adobe-plugin/js/CSInterface.js
+  -->
+  <script src="js/CSInterface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1c1c1c;
+  color: #d8d8d8;
+  font-family: 'Adobe Clean', Arial, sans-serif;
+  font-size: 12px;
+}
+
+#app { padding: 10px; }
+
+/* ── Header ── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #333;
+  margin-bottom: 8px;
+}
+h1 { font-size: 13px; font-weight: 600; color: #fff; }
+h2 { font-size: 11px; font-weight: 600; color: #bbb; margin-bottom: 8px; }
+
+#refreshBtn {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+#refreshBtn:hover { color: #fff; background: #333; }
+
+/* ── Status bar ── */
+#status-bar {
+  background: #252525;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-bottom: 10px;
+  font-size: 10px;
+}
+#sync-label           { color: #777; }
+#sync-label.connected { color: #4caf50; }
+#sync-label.syncing   { color: #ff9800; }
+#sync-label.error     { color: #f44336; }
+
+/* ── Project cards ── */
+.project-card {
+  background: #272727;
+  border: 1px solid #363636;
+  border-radius: 6px;
+  padding: 9px 10px;
+  margin-bottom: 8px;
+}
+.project-name  { font-weight: 600; color: #fff; margin-bottom: 2px; }
+.project-task  { color: #888; font-size: 10px; margin-bottom: 7px; }
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-select {
+  flex: 1;
+  background: #333;
+  border: 1px solid #444;
+  color: #d8d8d8;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.status-select:focus { outline: 1px solid #0078d4; }
+
+/* Status badges */
+.badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-Pending      { background: #303030; color: #888; }
+.badge-In-Progress  { background: #0e2d50; color: #5ab2ff; }
+.badge-Rendered     { background: #0e3020; color: #5aff8e; }
+.badge-Uploaded     { background: #2a0e50; color: #c07aff; }
+
+.frameio-link {
+  display: block;
+  margin-top: 6px;
+  color: #4a9eff;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.frameio-link:hover { text-decoration: underline; }
+
+/* ── Render section ── */
+#render-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+#renderBtn {
+  width: 100%;
+  background: #0078d4;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  padding: 7px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+#renderBtn:hover    { background: #005fa3; }
+#renderBtn:disabled { background: #333; color: #555; cursor: not-allowed; }
+
+#render-msg { font-size: 10px; color: #888; }
+
+/* ── Misc ── */
+.placeholder { color: #555; text-align: center; padding: 20px; }
+.error-msg   { color: #f44336; text-align: center; padding: 10px; font-size: 11px; }
