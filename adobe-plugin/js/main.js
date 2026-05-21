@@ -4,21 +4,21 @@ const csInterface = new CSInterface();
 
 // ── Editor roster with colours ────────────────────────────────────────────────
 const EDITORS = [
-  { name: 'Rahul',        bg: '#2d5a3d', color: '#7edb9a' },
-  { name: 'Suraj',        bg: '#1a3d5c', color: '#7ec8ff' },
-  { name: 'Harshil',      bg: '#3a3a3a', color: '#d8d8d8' },
-  { name: 'Shoyeb',       bg: '#5a4200', color: '#ffd166' },
-  { name: 'Chandu',       bg: '#5a1a3a', color: '#ff9ece' },
-  { name: 'Yash',         bg: '#2a5a1a', color: '#a8e06a' },
-  { name: 'Rushabh',      bg: '#1a2a5a', color: '#8ab4ff' },
-  { name: 'Meet',         bg: '#1a4a4a', color: '#6fe0d8' },
-  { name: 'Bilal',        bg: '#3d1a5a', color: '#c07aff' },
-  { name: 'Saurabh',      bg: '#5a3000', color: '#ffaa55' },
-  { name: 'Bhanu',        bg: '#5a1a1a', color: '#ff8080' },
-  { name: 'Prashant',     bg: '#5a2a1a', color: '#ffaa88' },
-  { name: 'Not Assigned', bg: '#6b0000', color: '#ff6b6b' },
-  { name: 'In Progress',  bg: '#333333', color: '#bbbbbb' },
-  { name: 'Rendered',     bg: '#1a1a1a', color: '#888888' },
+  { name: 'Rahul',        bg: '#253328', color: '#8aab90' },
+  { name: 'Suraj',        bg: '#1e2e3d', color: '#7a9db8' },
+  { name: 'Harshil',      bg: '#2e2e2e', color: '#999999' },
+  { name: 'Shoyeb',       bg: '#352d1a', color: '#b09a6a' },
+  { name: 'Chandu',       bg: '#352030', color: '#a87890' },
+  { name: 'Yash',         bg: '#263320', color: '#8aaa78' },
+  { name: 'Rushabh',      bg: '#1e2535', color: '#7888aa' },
+  { name: 'Meet',         bg: '#1e3030', color: '#6a9898' },
+  { name: 'Bilal',        bg: '#2c2038', color: '#9878b8' },
+  { name: 'Saurabh',      bg: '#352818', color: '#aa8860' },
+  { name: 'Bhanu',        bg: '#382020', color: '#aa7070' },
+  { name: 'Prashant',     bg: '#352820', color: '#a88070' },
+  { name: 'Not Assigned', bg: '#2e2020', color: '#886060' },
+  { name: 'In Progress',  bg: '#252525', color: '#808080' },
+  { name: 'Rendered',     bg: '#202020', color: '#606060' },
 ];
 
 function editorStyle(name) {
