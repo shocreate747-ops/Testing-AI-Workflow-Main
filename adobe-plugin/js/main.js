@@ -1,4 +1,7 @@
-const API_BASE = (window.API_BASE || 'http://localhost:3000').replace(/\/$/, '');
+function getApiBase() {
+  const saved = localStorage.getItem('qc_api_base');
+  return (saved || window.API_BASE || 'http://localhost:3000').replace(/\/$/, '');
+}
 const csInterface = new CSInterface();
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -69,17 +72,25 @@ function sheetParam() {
 
 // ── Settings panel ────────────────────────────────────────────────────────────
 
-const settingsBtn   = document.getElementById('settingsBtn');
-const settingsPanel = document.getElementById('settings-panel');
-const sheetUrlInput = document.getElementById('sheet-url-input');
-const sheetUrlSave  = document.getElementById('sheet-url-save');
+const settingsBtn    = document.getElementById('settingsBtn');
+const settingsPanel  = document.getElementById('settings-panel');
+const backendUrlInput  = document.getElementById('backend-url-input');
+const backendUrlSave   = document.getElementById('backend-url-save');
+const backendUrlStatus = document.getElementById('backend-url-status');
+const sheetUrlInput  = document.getElementById('sheet-url-input');
+const sheetUrlSave   = document.getElementById('sheet-url-save');
 const sheetUrlStatus = document.getElementById('sheet-url-status');
 
-// Restore saved URL display on load
 (function initSettings() {
-  const saved = getSheetId();
-  if (saved) {
-    sheetUrlInput.value = saved;
+  const savedApi = localStorage.getItem('qc_api_base');
+  if (savedApi) {
+    backendUrlInput.value = savedApi;
+    backendUrlStatus.textContent = 'Backend URL saved ✓';
+    backendUrlStatus.className = 'ok';
+  }
+  const savedSheet = getSheetId();
+  if (savedSheet) {
+    sheetUrlInput.value = savedSheet;
     sheetUrlStatus.textContent = 'Sheet linked ✓';
     sheetUrlStatus.className = 'ok';
   }
@@ -88,6 +99,19 @@ const sheetUrlStatus = document.getElementById('sheet-url-status');
 settingsBtn.addEventListener('click', () => {
   const hidden = settingsPanel.classList.toggle('hidden');
   settingsBtn.classList.toggle('active', !hidden);
+});
+
+backendUrlSave.addEventListener('click', () => {
+  const val = backendUrlInput.value.trim().replace(/\/$/, '');
+  if (!val.startsWith('http')) {
+    backendUrlStatus.textContent = 'Enter a valid URL starting with http(s)://';
+    backendUrlStatus.className = 'err';
+    return;
+  }
+  localStorage.setItem('qc_api_base', val);
+  backendUrlStatus.textContent = 'Saved — reconnecting…';
+  backendUrlStatus.className = 'ok';
+  fetchAnimations();
 });
 
 sheetUrlSave.addEventListener('click', () => {
@@ -101,8 +125,6 @@ sheetUrlSave.addEventListener('click', () => {
   sheetUrlInput.value = id;
   sheetUrlStatus.textContent = 'Saved — fetching sheet…';
   sheetUrlStatus.className = 'ok';
-  settingsPanel.classList.add('hidden');
-  settingsBtn.classList.remove('active');
   fetchAnimations();
 });
 
@@ -172,7 +194,7 @@ document.addEventListener('click', e => {
 async function fetchAnimations() {
   setSync('Syncing…', 'syncing');
   try {
-    const res  = await fetch(`${API_BASE}/api/animations${sheetParam()}`);
+    const res  = await fetch(`${getApiBase()}/api/animations${sheetParam()}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     allAnimations = data.animations || [];
@@ -291,7 +313,7 @@ async function updateField(animationNo, field, value) {
     if (id) body.sheetId = id;
 
     const res = await fetch(
-      `${API_BASE}/api/animations/${encodeURIComponent(animationNo)}/field`,
+      `${getApiBase()}/api/animations/${encodeURIComponent(animationNo)}/field`,
       { method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body) }
     );

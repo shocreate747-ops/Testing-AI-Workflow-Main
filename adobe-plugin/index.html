@@ -21,7 +21,14 @@
 
     <!-- Settings panel (hidden by default) -->
     <div id="settings-panel" class="hidden">
-      <label class="settings-label">Google Sheet URL</label>
+      <label class="settings-label">Backend URL</label>
+      <div class="settings-row">
+        <input id="backend-url-input" type="text" placeholder="https://your-app.up.railway.app" autocomplete="off" />
+        <button id="backend-url-save">Save</button>
+      </div>
+      <p id="backend-url-status"></p>
+
+      <label class="settings-label" style="margin-top:10px">Google Sheet URL</label>
       <div class="settings-row">
         <input id="sheet-url-input" type="text" placeholder="Paste your Google Sheet URL…" autocomplete="off" />
         <button id="sheet-url-save">Save</button>
