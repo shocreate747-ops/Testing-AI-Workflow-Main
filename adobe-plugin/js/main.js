@@ -1,5 +1,5 @@
 function getApiBase() {
-  const API_BASE = 'https://your-app.up.railway.app';
+  const saved = localStorage.getItem('qc_api_base');
   return (saved || window.API_BASE || 'http://localhost:3000').replace(/\/$/, '');
 }
 const csInterface = new CSInterface();
