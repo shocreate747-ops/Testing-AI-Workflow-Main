@@ -23,6 +23,11 @@ app.use((req, res, next) => {
 app.use('/webhook', require('./routes/webhook'));
 app.use('/api', require('./routes/api'));
 
+// Serve plugin assets so the panel auto-updates without reinstall
+app.use('/plugin', require('express').static(require('path').join(__dirname, '../adobe-plugin'), {
+  setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache'),
+}));
+
 app.get('/health', (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
 const PORT = process.env.PORT || 3000;
