@@ -1,7 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const { verifySignature, extractAssetInfo } = require('../services/frameio');
-const { updateFrameioLink } = require('../services/googleSheets');
+const { updateReviewLink } = require('../services/googleSheets');
 
 const HANDLED_EVENTS = new Set(['asset.ready', 'asset.created', 'presentation.ready']);
 
@@ -24,7 +24,7 @@ router.post('/frameio', async (req, res) => {
     }
 
     // asset.projectId should match the Project ID in column A of your Sheet
-    await updateFrameioLink(asset.projectId, asset.link);
+    await updateReviewLink(asset.projectId, asset.link);
 
     console.log(`[frame.io] project=${asset.projectId} link=${asset.link}`);
     res.json({ success: true, projectId: asset.projectId, link: asset.link });

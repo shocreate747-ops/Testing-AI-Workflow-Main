@@ -64,7 +64,7 @@ Google Sheets  ◄────────────────────�
 
    | A | B | C | D | E | F | G |
    |---|---|---|---|---|---|---|
-   | Project ID | Project Name | Task | Status | Assigned To | Deadline | Frame.io Link |
+   | Project ID | Project Name | Task | Status | Assigned To | Deadline | Review Link |
 
 2. Go to [Google Cloud Console](https://console.cloud.google.com) → create a project → enable **Google Sheets API**.
 3. Create a **Service Account** → download the JSON key.
@@ -141,7 +141,7 @@ The plugin's **Start Render** button triggers the After Effects render queue via
 
 | Variable | Description |
 |---|---|
-| `GOOGLE_SHEET_ID` | ID from the sheet URL |
+| `GOOGLE_SHEET_ID` | `1tmvW5StFGdPN-Yw-gZOWMlpCbYbqj2ydvkzlAFfFqYY` |
 | `GOOGLE_SHEET_NAME` | Tab name (default: `Projects`) |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | Full JSON content of the service account key |
 | `FRAMEIO_WEBHOOK_SECRET` | Signing secret from Frame.io webhook settings |

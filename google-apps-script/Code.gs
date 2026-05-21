@@ -63,7 +63,7 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     var projectId   = data.projectId;
     var status      = data.status;
-    var frameioLink = data.frameioLink;
+    var reviewLink = data.reviewLink;
 
     var ss    = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName(SHEET_NAME);
@@ -71,8 +71,8 @@ function doPost(e) {
 
     for (var i = 1; i < rows.length; i++) {
       if (String(rows[i][0]) === String(projectId)) {
-        if (status)      sheet.getRange(i + 1, STATUS_COL).setValue(status);
-        if (frameioLink) sheet.getRange(i + 1, 7).setValue(frameioLink); // column G
+        if (status)     sheet.getRange(i + 1, STATUS_COL).setValue(status);
+        if (reviewLink) sheet.getRange(i + 1, 7).setValue(reviewLink); // column G = Review Link
         break;
       }
     }

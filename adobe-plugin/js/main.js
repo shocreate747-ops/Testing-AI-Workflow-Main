@@ -58,8 +58,8 @@ function renderList(projects) {
         </select>
         <span class="${badgeClass(p.status)}">${esc(p.status)}</span>
       </div>
-      ${p.frameioLink
-        ? `<a class="frameio-link" href="${esc(p.frameioLink)}" title="${esc(p.frameioLink)}">▶ Frame.io — ${esc(p.name)}</a>`
+      ${p.reviewLink
+        ? `<a class="frameio-link" href="${esc(p.reviewLink)}" title="${esc(p.reviewLink)}">▶ Review Link — ${esc(p.name)}</a>`
         : ''}
     </div>
   `).join('');
