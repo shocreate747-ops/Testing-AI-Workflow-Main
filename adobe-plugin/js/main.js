@@ -233,15 +233,13 @@ function renderList(animations) {
 
 // ── Dropdown positioning (flips upward when too close to bottom) ──────────────
 function positionDropdown(dd, rect) {
-  dd.style.left = rect.left + 'px';
-  dd.style.top  = (rect.bottom + 4) + 'px';
-  // After render, check if it overflows the viewport and flip up if so
-  requestAnimationFrame(() => {
-    const ddRect = dd.getBoundingClientRect();
-    if (ddRect.bottom > window.innerHeight - 8) {
-      dd.style.top = (rect.top - ddRect.height - 4) + 'px';
-    }
-  });
+  const itemCount      = dd.children.length;
+  const estimatedH     = itemCount * 27 + 12;
+  const spaceBelow     = window.innerHeight - rect.bottom - 8;
+  dd.style.left = Math.max(4, rect.left) + 'px';
+  dd.style.top  = spaceBelow >= estimatedH
+    ? (rect.bottom + 4) + 'px'
+    : (rect.top - estimatedH - 4) + 'px';
 }
 
 // ── Status dropdown ───────────────────────────────────────────────────────────
