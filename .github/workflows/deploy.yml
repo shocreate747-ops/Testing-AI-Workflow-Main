@@ -23,20 +23,5 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service production-tracker-backend
-
-      # After deployment Railway prints the public URL.
-      # Set these secrets in your repo Settings → Secrets and variables → Actions:
-      #   RAILWAY_TOKEN       — from railway.app → Account Settings → Tokens
-      #
-      # Environment variables to configure on Railway's dashboard:
-      #   GOOGLE_SHEET_ID
-      #   GOOGLE_SHEET_NAME
-      #   GOOGLE_SERVICE_ACCOUNT_JSON
-      #   FRAMEIO_WEBHOOK_SECRET
+      - name: Confirm deploy
+        run: echo "Backend changes on main — Railway auto-deploys from main branch."
