@@ -42,18 +42,57 @@ h1 { font-size: 13px; font-weight: 600; color: #fff; }
 #sync-label.syncing   { color: #ff9800; }
 #sync-label.error     { color: #f44336; }
 
+/* ── Animation cards ── */
 .animation-card {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #272727;
   border: 1px solid #363636;
   border-radius: 5px;
-  padding: 7px 10px;
+  padding: 6px 10px;
   margin-bottom: 5px;
 }
-.anim-no     { font-weight: 700; color: #fff; min-width: 36px; }
-.anim-editor { color: #aaa; }
 
+.anim-no {
+  font-weight: 700;
+  color: #fff;
+  min-width: 36px;
+  flex-shrink: 0;
+}
+
+/* ── Editable editor input ── */
+.editor-input {
+  flex: 1;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #aaa;
+  font-size: 12px;
+  font-family: inherit;
+  padding: 3px 6px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  cursor: text;
+}
+.editor-input:hover {
+  border-color: #555;
+  background: #333;
+}
+.editor-input:focus {
+  border-color: #0078d4;
+  background: #1e1e1e;
+  color: #fff;
+}
+.editor-input.saving {
+  border-color: #ff9800;
+  color: #ff9800;
+}
+.editor-input.saved {
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+/* ── Misc ── */
 .placeholder { color: #555; text-align: center; padding: 20px; }
 .error-msg   { color: #f44336; text-align: center; padding: 10px; font-size: 11px; }

@@ -14,6 +14,8 @@ function setSync(msg, cls) {
   el.className   = cls || '';
 }
 
+// ── Fetch & render ────────────────────────────────────────────────────────────
+
 async function fetchAnimations() {
   setSync('Syncing…', 'syncing');
   try {
@@ -38,10 +40,54 @@ function renderList(animations) {
   container.innerHTML = animations.map(a => `
     <div class="animation-card">
       <span class="anim-no">${esc(a.animationNo)}</span>
-      <span class="anim-editor">${esc(a.editor)}</span>
+      <input
+        class="editor-input"
+        type="text"
+        value="${esc(a.editor)}"
+        placeholder="Assign editor…"
+        data-id="${esc(a.animationNo)}"
+        data-original="${esc(a.editor)}"
+        onblur="commitEditor(this)"
+        onkeydown="if(event.key==='Enter'){this.blur()}if(event.key==='Escape'){this.value=this.dataset.original;this.blur()}"
+      />
     </div>
   `).join('');
 }
+
+// ── Commit editor change ──────────────────────────────────────────────────────
+
+async function commitEditor(input) {
+  const newVal  = input.value.trim();
+  const original = input.dataset.original;
+  if (newVal === original) return; // no change
+
+  const animationNo = input.dataset.id;
+  input.classList.add('saving');
+  setSync('Updating…', 'syncing');
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/animations/${encodeURIComponent(animationNo)}/field`,
+      {
+        method:  'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ field: 'editor', value: newVal || 'Not Assigned' }),
+      }
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    input.dataset.original = newVal || 'Not Assigned';
+    input.classList.remove('saving');
+    input.classList.add('saved');
+    setSync('Updated ✓', 'connected');
+    setTimeout(() => input.classList.remove('saved'), 1500);
+  } catch (err) {
+    input.value = original; // revert on error
+    input.classList.remove('saving');
+    setSync(`Update failed: ${err.message}`, 'error');
+  }
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
 
 document.getElementById('refreshBtn').addEventListener('click', fetchAnimations);
 
