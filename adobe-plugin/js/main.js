@@ -231,6 +231,19 @@ function renderList(animations) {
   `).join('');
 }
 
+// ── Dropdown positioning (flips upward when too close to bottom) ──────────────
+function positionDropdown(dd, rect) {
+  dd.style.left = rect.left + 'px';
+  dd.style.top  = (rect.bottom + 4) + 'px';
+  // After render, check if it overflows the viewport and flip up if so
+  requestAnimationFrame(() => {
+    const ddRect = dd.getBoundingClientRect();
+    if (ddRect.bottom > window.innerHeight - 8) {
+      dd.style.top = (rect.top - ddRect.height - 4) + 'px';
+    }
+  });
+}
+
 // ── Status dropdown ───────────────────────────────────────────────────────────
 let openStatusDD = null;
 
@@ -250,9 +263,8 @@ function toggleStatusDropdown(btn, animationNo, current) {
     item.onclick = () => { updateStatus(animationNo, s, btn); closeStatus(); };
     dd.appendChild(item);
   });
-  dd.style.top  = (rect.bottom + 4) + 'px';
-  dd.style.left = rect.left + 'px';
   document.body.appendChild(dd); openStatusDD = dd;
+  positionDropdown(dd, rect);
 }
 
 document.addEventListener('click', e => {
@@ -286,9 +298,8 @@ function toggleAssignDropdown(btn, animationNo, current) {
     item.onclick = () => { assignEditor(animationNo, e.name, btn); closeAssign(); };
     dd.appendChild(item);
   });
-  dd.style.top  = (rect.bottom + 4) + 'px';
-  dd.style.left = rect.left + 'px';
   document.body.appendChild(dd); openAssignDD = dd;
+  positionDropdown(dd, rect);
 }
 
 document.addEventListener('click', e => {
