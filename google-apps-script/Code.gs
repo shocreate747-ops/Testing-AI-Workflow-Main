@@ -5,74 +5,89 @@
 // 1. Open your Google Sheet → Extensions → Apps Script
 // 2. Paste this entire file, replacing any existing code
 // 3. Set BACKEND_URL below to your deployed backend address
-// 4. Click Deploy → New deployment → Web app
-//    • Execute as: Me
-//    • Who has access: Anyone
-// 5. Copy the Web App URL — you will need it for the Frame.io → Sheet push
+// 4. Set SHEET_NAME to the exact tab name in your sheet
+// 5. Click Deploy → New deployment → Web app
+//    • Execute as: Me  •  Who has access: Anyone
 // 6. Add the onEdit trigger:
 //    Triggers (clock icon) → Add trigger → onEdit, From spreadsheet, On edit
 // ─────────────────────────────────────────────────────────────────────────────
 
 var BACKEND_URL  = 'https://your-backend-url.com'; // ← change this
-var SHEET_NAME   = 'Projects';
-var STATUS_COL   = 4; // column D (1-indexed)
-var PROJECT_ID_COL = 1; // column A
+var SHEET_NAME   = 'Sheet1';                        // ← match your tab name
+var ANIM_NO_COL  = 1;                               // column A
 
-// ── Trigger: fires when any cell is edited ────────────────────────────────────
+// Maps column index → field name
+var FIELD_MAP = {
+  2:  'editor',
+  3:  'spellCheck',
+  4:  'sourcesVerified',
+  5:  'fontsConsistency',
+  6:  'colorConsistency',
+  7:  'understandability',
+  8:  'realisticMidjourney',
+  9:  'brollsAccuracy',
+  10: 'timelySubmission',
+  11: 'reviewer',
+  12: 'reviewLink',
+  13: 'status',       // ← Column M: Pending / In Progress / Rendered / Uploaded
+};
+
+// ── Trigger: fires on every cell edit ────────────────────────────────────────
 function onEdit(e) {
   var sheet = e.source.getActiveSheet();
   if (sheet.getName() !== SHEET_NAME) return;
 
   var col = e.range.getColumn();
   var row = e.range.getRow();
+  if (row < 2) return; // skip header
 
-  // Only react to status column edits; ignore the header row
-  if (col !== STATUS_COL || row < 2) return;
+  var field = FIELD_MAP[col];
+  if (!field) return;
 
-  var newStatus  = e.range.getValue();
-  var validStatuses = ['Pending', 'In Progress', 'Rendered', 'Uploaded'];
-  if (validStatuses.indexOf(newStatus) === -1) return;
+  var animationNo = sheet.getRange(row, ANIM_NO_COL).getValue();
+  if (!animationNo) return;
 
-  var projectId = sheet.getRange(row, PROJECT_ID_COL).getValue();
-  if (!projectId) return;
-
-  syncStatusToBackend(projectId, newStatus);
+  syncToBackend(animationNo, field, e.range.getValue());
 }
 
-// ── Push a status change to the backend (which updates the Sheet column) ──────
-function syncStatusToBackend(projectId, status) {
+// ── Push change to backend ────────────────────────────────────────────────────
+function syncToBackend(animationNo, field, value) {
   try {
     var options = {
       method:      'PUT',
       contentType: 'application/json',
-      payload:     JSON.stringify({ status: status, source: 'google-sheets' }),
+      payload:     JSON.stringify({ field: field, value: value }),
       muteHttpExceptions: true,
     };
-    var url      = BACKEND_URL + '/api/projects/' + encodeURIComponent(projectId) + '/status';
+    var url = BACKEND_URL + '/api/animations/' + encodeURIComponent(animationNo) + '/field';
     var response = UrlFetchApp.fetch(url, options);
-    Logger.log('[sync] ' + projectId + ' → ' + status + ' | response: ' + response.getContentText());
+    Logger.log('[sync] ' + animationNo + '.' + field + ' = ' + value + ' | ' + response.getContentText());
   } catch (err) {
     Logger.log('[sync error] ' + err.message);
   }
 }
 
-// ── Web App endpoint — called by the backend to push updates back to the Sheet ─
-// The backend calls this URL when the plugin or Frame.io changes status/link.
+// ── Web App endpoint — backend pushes updates back to the sheet ───────────────
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
-    var projectId   = data.projectId;
-    var status      = data.status;
-    var frameioLink = data.frameioLink;
+    var data        = JSON.parse(e.postData.contents);
+    var animationNo = data.animationNo;
+    var field       = data.field;
+    var value       = data.value;
 
     var ss    = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName(SHEET_NAME);
     var rows  = sheet.getDataRange().getValues();
 
+    var colIndex = null;
+    for (var k in FIELD_MAP) {
+      if (FIELD_MAP[k] === field) { colIndex = parseInt(k); break; }
+    }
+    if (!colIndex) throw new Error('Unknown field: ' + field);
+
     for (var i = 1; i < rows.length; i++) {
-      if (String(rows[i][0]) === String(projectId)) {
-        if (status)      sheet.getRange(i + 1, STATUS_COL).setValue(status);
-        if (frameioLink) sheet.getRange(i + 1, 7).setValue(frameioLink); // column G
+      if (String(rows[i][0]) === String(animationNo)) {
+        sheet.getRange(i + 1, colIndex).setValue(value);
         break;
       }
     }
@@ -87,7 +102,6 @@ function doPost(e) {
   }
 }
 
-// ── Utility: log this script's deployed web app URL (run once manually) ───────
 function logWebAppUrl() {
   Logger.log(ScriptApp.getService().getUrl());
 }
