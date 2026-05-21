@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// QC Review Tracker — Google Apps Script
+// Production Tracker — Google Apps Script
 //
 // HOW TO DEPLOY
 // 1. Open your Google Sheet → Extensions → Apps Script
@@ -7,8 +7,7 @@
 // 3. Set BACKEND_URL below to your deployed backend address
 // 4. Set SHEET_NAME to the exact tab name in your sheet
 // 5. Click Deploy → New deployment → Web app
-//    • Execute as: Me
-//    • Who has access: Anyone
+//    • Execute as: Me  •  Who has access: Anyone
 // 6. Add the onEdit trigger:
 //    Triggers (clock icon) → Add trigger → onEdit, From spreadsheet, On edit
 // ─────────────────────────────────────────────────────────────────────────────
@@ -17,7 +16,7 @@ var BACKEND_URL  = 'https://your-backend-url.com'; // ← change this
 var SHEET_NAME   = 'Sheet1';                        // ← match your tab name
 var ANIM_NO_COL  = 1;                               // column A
 
-// Maps column index → field name sent to the backend
+// Maps column index → field name
 var FIELD_MAP = {
   2:  'editor',
   3:  'spellCheck',
@@ -30,6 +29,7 @@ var FIELD_MAP = {
   10: 'timelySubmission',
   11: 'reviewer',
   12: 'reviewLink',
+  13: 'status',       // ← Column M: Pending / In Progress / Rendered / Uploaded
 };
 
 // ── Trigger: fires on every cell edit ────────────────────────────────────────
@@ -47,11 +47,11 @@ function onEdit(e) {
   var animationNo = sheet.getRange(row, ANIM_NO_COL).getValue();
   if (!animationNo) return;
 
-  syncFieldToBackend(animationNo, field, e.range.getValue());
+  syncToBackend(animationNo, field, e.range.getValue());
 }
 
-// ── Push a single field change to the backend ─────────────────────────────────
-function syncFieldToBackend(animationNo, field, value) {
+// ── Push change to backend ────────────────────────────────────────────────────
+function syncToBackend(animationNo, field, value) {
   try {
     var options = {
       method:      'PUT',
@@ -59,7 +59,7 @@ function syncFieldToBackend(animationNo, field, value) {
       payload:     JSON.stringify({ field: field, value: value }),
       muteHttpExceptions: true,
     };
-    var url      = BACKEND_URL + '/api/animations/' + encodeURIComponent(animationNo) + '/field';
+    var url = BACKEND_URL + '/api/animations/' + encodeURIComponent(animationNo) + '/field';
     var response = UrlFetchApp.fetch(url, options);
     Logger.log('[sync] ' + animationNo + '.' + field + ' = ' + value + ' | ' + response.getContentText());
   } catch (err) {
@@ -67,7 +67,7 @@ function syncFieldToBackend(animationNo, field, value) {
   }
 }
 
-// ── Web App endpoint — receives updates from the backend ──────────────────────
+// ── Web App endpoint — backend pushes updates back to the sheet ───────────────
 function doPost(e) {
   try {
     var data        = JSON.parse(e.postData.contents);
@@ -79,7 +79,6 @@ function doPost(e) {
     var sheet = ss.getSheetByName(SHEET_NAME);
     var rows  = sheet.getDataRange().getValues();
 
-    // Find the column index for the field
     var colIndex = null;
     for (var k in FIELD_MAP) {
       if (FIELD_MAP[k] === field) { colIndex = parseInt(k); break; }
@@ -103,7 +102,6 @@ function doPost(e) {
   }
 }
 
-// ── Utility: log this script's deployed web app URL (run once manually) ───────
 function logWebAppUrl() {
   Logger.log(ScriptApp.getService().getUrl());
 }

@@ -20,7 +20,9 @@ header {
 }
 h1 { font-size: 13px; font-weight: 600; color: #fff; }
 
-#refreshBtn {
+.header-actions { display: flex; gap: 4px; }
+
+#refreshBtn, #settingsBtn {
   background: none;
   border: none;
   color: #666;
@@ -29,7 +31,70 @@ h1 { font-size: 13px; font-weight: 600; color: #fff; }
   padding: 2px 6px;
   border-radius: 3px;
 }
-#refreshBtn:hover { color: #fff; background: #333; }
+#refreshBtn:hover, #settingsBtn:hover { color: #fff; background: #333; }
+#settingsBtn.active { color: #aaa; background: #2e2e2e; }
+
+/* ── Settings panel ── */
+#settings-panel {
+  background: #202020;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+#settings-panel.hidden { display: none; }
+
+.settings-label {
+  display: block;
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.settings-row {
+  display: flex;
+  gap: 6px;
+}
+
+#sheet-url-input {
+  flex: 1;
+  background: #161616;
+  border: 1px solid #383838;
+  border-radius: 4px;
+  color: #ccc;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 5px 8px;
+  outline: none;
+}
+#sheet-url-input:focus { border-color: #555; }
+#sheet-url-input::placeholder { color: #3a3a3a; }
+
+#sheet-url-save {
+  background: #2e2e2e;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #aaa;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#sheet-url-save:hover { background: #3a3a3a; color: #fff; }
+
+#sheet-url-status {
+  font-size: 10px;
+  margin-top: 5px;
+  color: #555;
+  min-height: 14px;
+}
+#sheet-url-status.ok  { color: #5a9a5a; }
+#sheet-url-status.err { color: #9a4040; }
 
 /* ── Status bar ── */
 #status-bar {
@@ -131,15 +196,19 @@ h1 { font-size: 13px; font-weight: 600; color: #fff; }
 
 /* ── Animation cards ── */
 .animation-card {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   background: #252525;
   border: 1px solid #333;
   border-radius: 5px;
   padding: 6px 10px;
   margin-bottom: 4px;
 }
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .anim-no {
   font-weight: 700;
   color: #ccc;
@@ -160,6 +229,21 @@ h1 { font-size: 13px; font-weight: 600; color: #fff; }
   white-space: nowrap;
 }
 .editor-pill:hover { filter: brightness(1.2); }
+
+/* ── Status pill ── */
+.status-pill {
+  border: none;
+  border-radius: 16px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.1s;
+  white-space: nowrap;
+  margin-left: auto;
+}
+.status-pill:hover { filter: brightness(1.2); }
 
 /* ── Assign dropdown ── */
 .editor-dropdown {
@@ -190,6 +274,74 @@ h1 { font-size: 13px; font-weight: 600; color: #fff; }
 }
 .dd-item:hover  { filter: brightness(1.2); }
 .dd-item.active { outline: 1px solid rgba(255,255,255,0.2); }
+
+/* ── Status dropdown ── */
+.status-dropdown {
+  position: fixed;
+  z-index: 9999;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  border-radius: 7px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 120px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+.sd-item {
+  border: none;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: filter 0.1s;
+}
+.sd-item:hover  { filter: brightness(1.2); }
+.sd-item.active { outline: 1px solid rgba(255,255,255,0.2); }
+
+/* ── Review link ── */
+.review-link {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 10px;
+  color: #6a8aaa;
+  text-decoration: none;
+  padding: 2px 0;
+}
+.review-link:hover { color: #8ab4d8; text-decoration: underline; }
+
+/* ── Render section ── */
+#render-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #2e2e2e;
+  margin-top: 10px;
+  padding-top: 8px;
+}
+#renderBtn {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #aaa;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#renderBtn:hover:not(:disabled)    { background: #333; color: #fff; }
+#renderBtn:disabled                { opacity: 0.5; cursor: default; }
+#render-msg {
+  font-size: 10px;
+  color: #666;
+  flex: 1;
+}
 
 /* ── Misc ── */
 .placeholder { color: #444; text-align: center; padding: 20px; font-size: 11px; }

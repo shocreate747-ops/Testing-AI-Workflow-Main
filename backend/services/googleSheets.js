@@ -1,12 +1,15 @@
 const { google } = require('googleapis');
 
-// Sheet columns (1-indexed):
+// Sheet columns:
 // A=Animation No.  B=Editor  C=Spell Check  D=Sources Verified
 // E=Fonts Consistency  F=Color Consistency  G=Understandability
-// H=Realistic Midjourney  I=Brolls Accuracy  J=Timely Submission  K=Reviewer  L=Review Link
+// H=Realistic Midjourney  I=Brolls Accuracy  J=Timely Submission
+// K=Reviewer  L=Review Link  M=Status
 
-const SHEET_ID   = process.env.GOOGLE_SHEET_ID;
+const DEFAULT_SHEET_ID   = process.env.GOOGLE_SHEET_ID;
 const SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
+
+const VALID_STATUSES = ['Pending', 'In Progress', 'Rendered', 'Uploaded'];
 
 function getAuth() {
   const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
@@ -20,16 +23,21 @@ async function getSheetsClient() {
   return google.sheets({ version: 'v4', auth: getAuth() });
 }
 
+function resolveSheetId(sheetId) {
+  return sheetId || DEFAULT_SHEET_ID;
+}
+
 function toBoolean(val) {
   if (typeof val === 'boolean') return val;
   return String(val).toUpperCase() === 'TRUE';
 }
 
-async function getAllAnimations() {
+async function getAllAnimations(sheetId) {
+  const id = resolveSheetId(sheetId);
   const sheets = await getSheetsClient();
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:L`,
+    spreadsheetId: id,
+    range: `${SHEET_NAME}!A2:M`,
   });
   return (res.data.values || [])
     .filter(row => row[0])
@@ -47,6 +55,7 @@ async function getAllAnimations() {
       timelySubmission:    toBoolean(row[9]),
       reviewer:            row[10] || 'Not Reviewed',
       reviewLink:          row[11] || '',
+      status:              row[12] || 'Pending',
     }));
 }
 
@@ -62,19 +71,21 @@ const FIELD_COL = {
   timelySubmission:    'J',
   reviewer:            'K',
   reviewLink:          'L',
+  status:              'M',
 };
 
-async function updateAnimationField(animationNo, field, value) {
+async function updateAnimationField(animationNo, field, value, sheetId) {
+  const id  = resolveSheetId(sheetId);
   const col = FIELD_COL[field];
   if (!col) throw new Error(`Unknown field: ${field}`);
 
   const sheets     = await getSheetsClient();
-  const animations = await getAllAnimations();
+  const animations = await getAllAnimations(id);
   const anim       = animations.find(a => a.animationNo === animationNo);
   if (!anim) throw new Error(`Animation "${animationNo}" not found in sheet`);
 
   await sheets.spreadsheets.values.update({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: id,
     range: `${SHEET_NAME}!${col}${anim.rowIndex}`,
     valueInputOption: 'RAW',
     requestBody: { values: [[value]] },
@@ -82,4 +93,25 @@ async function updateAnimationField(animationNo, field, value) {
   return { ...anim, [field]: value };
 }
 
-module.exports = { getAllAnimations, updateAnimationField, FIELD_COL };
+// Called by Frame.io webhook — writes review link + sets status to Uploaded
+async function markUploaded(animationNo, reviewLink, sheetId) {
+  const id         = resolveSheetId(sheetId);
+  const sheets     = await getSheetsClient();
+  const animations = await getAllAnimations(id);
+  const anim       = animations.find(a => a.animationNo === animationNo);
+  if (!anim) throw new Error(`Animation "${animationNo}" not found in sheet`);
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: id,
+    requestBody: {
+      valueInputOption: 'RAW',
+      data: [
+        { range: `${SHEET_NAME}!L${anim.rowIndex}`, values: [[reviewLink]] },
+        { range: `${SHEET_NAME}!M${anim.rowIndex}`, values: [['Uploaded']] },
+      ],
+    },
+  });
+  return { ...anim, reviewLink, status: 'Uploaded' };
+}
+
+module.exports = { getAllAnimations, updateAnimationField, markUploaded, FIELD_COL, VALID_STATUSES };

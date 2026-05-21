@@ -13,8 +13,21 @@
 
     <header>
       <h1>QC Review Tracker</h1>
-      <button id="refreshBtn" title="Refresh">↻</button>
+      <div class="header-actions">
+        <button id="settingsBtn" title="Settings">⚙</button>
+        <button id="refreshBtn" title="Refresh">↻</button>
+      </div>
     </header>
+
+    <!-- Settings panel (hidden by default) -->
+    <div id="settings-panel" class="hidden">
+      <label class="settings-label">Google Sheet URL</label>
+      <div class="settings-row">
+        <input id="sheet-url-input" type="text" placeholder="Paste your Google Sheet URL…" autocomplete="off" />
+        <button id="sheet-url-save">Save</button>
+      </div>
+      <p id="sheet-url-status"></p>
+    </div>
 
     <div id="status-bar">
       <span id="sync-label">Connecting…</span>
@@ -32,6 +45,12 @@
     <div id="animation-list">
       <p class="placeholder">Loading animations…</p>
     </div>
+
+    <!-- Render section -->
+    <section id="render-section">
+      <button id="renderBtn">Start Render</button>
+      <span id="render-msg"></span>
+    </section>
 
   </div>
 
