@@ -1,5 +1,5 @@
 function getApiBase() {
-  const API_BASE = 'https://railway.com/project/e9eaf0f8-2e30-4390-90bb-090c24841da2/service/8708eafe-4657-45db-a8dd-a152e23d7a0a?environmentId=00e11e24-afc5-420f-8ab8-a6bdce8964b5';
+  const API_BASE = 'https://your-app.up.railway.app';
   return (saved || window.API_BASE || 'http://localhost:3000').replace(/\/$/, '');
 }
 const csInterface = new CSInterface();
