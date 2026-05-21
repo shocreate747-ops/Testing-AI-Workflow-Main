@@ -29,6 +29,7 @@ var FIELD_MAP = {
   9:  'brollsAccuracy',
   10: 'timelySubmission',
   11: 'reviewer',
+  12: 'reviewLink',
 };
 
 // ── Trigger: fires on every cell edit ────────────────────────────────────────

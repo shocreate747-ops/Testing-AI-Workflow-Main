@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 // Sheet columns (1-indexed):
 // A=Animation No.  B=Editor  C=Spell Check  D=Sources Verified
 // E=Fonts Consistency  F=Color Consistency  G=Understandability
-// H=Realistic Midjourney  I=Brolls Accuracy  J=Timely Submission  K=Reviewer
+// H=Realistic Midjourney  I=Brolls Accuracy  J=Timely Submission  K=Reviewer  L=Review Link
 
 const SHEET_ID   = process.env.GOOGLE_SHEET_ID;
 const SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
@@ -29,7 +29,7 @@ async function getAllAnimations() {
   const sheets = await getSheetsClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:K`,
+    range: `${SHEET_NAME}!A2:L`,
   });
   return (res.data.values || [])
     .filter(row => row[0])
@@ -46,6 +46,7 @@ async function getAllAnimations() {
       brollsAccuracy:      toBoolean(row[8]),
       timelySubmission:    toBoolean(row[9]),
       reviewer:            row[10] || 'Not Reviewed',
+      reviewLink:          row[11] || '',
     }));
 }
 
@@ -60,6 +61,7 @@ const FIELD_COL = {
   brollsAccuracy:      'I',
   timelySubmission:    'J',
   reviewer:            'K',
+  reviewLink:          'L',
 };
 
 async function updateAnimationField(animationNo, field, value) {

@@ -8,11 +8,12 @@ Sheet: `1tmvW5StFGdPN-Yw-gZOWMlpCbYbqj2ydvkzlAFfFqYY`
 
 ## Sheet structure
 
-| A | B | C | D | E | F | G | H | I | J | K |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Animation No. | Editor | Spell Check | Sources Verified | Fonts Consistency | Color Consistency | Understandability | Realistic Midjourney | Brolls Accuracy | Timely Submission | Reviewer |
+| A | B | C | D | E | F | G | H | I | J | K | L |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Animation No. | Editor | Spell Check | Sources Verified | Fonts Consistency | Color Consistency | Understandability | Realistic Midjourney | Brolls Accuracy | Timely Submission | Reviewer | Review Link |
 
 - Columns C–J are booleans (`TRUE` / `FALSE`)
+- Column L is a plain URL (paste the review link here)
 - Column A is the unique key used to match rows (e.g. `A1`, `A2` …)
 
 ---

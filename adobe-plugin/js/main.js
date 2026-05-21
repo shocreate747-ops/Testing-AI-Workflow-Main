@@ -66,6 +66,9 @@ function renderList(animations) {
           </label>
         `).join('')}
       </div>
+      ${a.reviewLink
+        ? `<a class="review-link" href="${esc(a.reviewLink)}" title="${esc(a.reviewLink)}">▶ Review Link</a>`
+        : ''}
     </div>`;
   }).join('');
 }

@@ -6,6 +6,7 @@ const BOOLEAN_FIELDS = [
   'spellCheck', 'sourcesVerified', 'fontsConsistency', 'colorConsistency',
   'understandability', 'realisticMidjourney', 'brollsAccuracy', 'timelySubmission',
 ];
+// reviewLink and other string fields are coerced via String()
 const ALL_FIELDS = Object.keys(FIELD_COL);
 
 router.get('/animations', async (_req, res) => {
