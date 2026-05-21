@@ -61,37 +61,51 @@ h1 { font-size: 13px; font-weight: 600; color: #fff; }
   flex-shrink: 0;
 }
 
-/* ── Editable editor input ── */
-.editor-input {
-  flex: 1;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  color: #aaa;
-  font-size: 12px;
+/* ── Editor pill button ── */
+.editor-pill {
+  border: none;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
   font-family: inherit;
-  padding: 3px 6px;
-  outline: none;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
-  cursor: text;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  transition: opacity 0.15s, filter 0.15s;
+  white-space: nowrap;
 }
-.editor-input:hover {
-  border-color: #555;
-  background: #333;
-}
-.editor-input:focus {
-  border-color: #0078d4;
+.editor-pill:hover { filter: brightness(1.2); }
+.editor-pill:active { filter: brightness(0.9); }
+
+/* ── Dropdown ── */
+.editor-dropdown {
+  position: fixed;
+  z-index: 9999;
   background: #1e1e1e;
-  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
 }
-.editor-input.saving {
-  border-color: #ff9800;
-  color: #ff9800;
+
+.dd-item {
+  border: none;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  letter-spacing: 0.2px;
+  transition: filter 0.1s;
 }
-.editor-input.saved {
-  border-color: #4caf50;
-  color: #4caf50;
-}
+.dd-item:hover  { filter: brightness(1.25); }
+.dd-item.active { outline: 2px solid rgba(255,255,255,0.35); }
 
 /* ── Misc ── */
 .placeholder { color: #555; text-align: center; padding: 20px; }
