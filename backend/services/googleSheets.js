@@ -7,7 +7,7 @@ const { google } = require('googleapis');
 // K=Reviewer  L=Review Link  M=Status
 
 const DEFAULT_SHEET_ID   = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'Sheet1';
+const SHEET_NAME = process.env.GOOGLE_SHEET_NAME || 'El Nino';
 
 const VALID_STATUSES = ['Pending', 'In Progress', 'Rendered', 'Uploaded'];
 
