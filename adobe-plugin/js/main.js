@@ -250,8 +250,8 @@ function toggleStatusDropdown(btn, animationNo, current) {
     item.onclick = () => { updateStatus(animationNo, s, btn); closeStatus(); };
     dd.appendChild(item);
   });
-  dd.style.top  = (rect.bottom + window.scrollY + 4) + 'px';
-  dd.style.left = (rect.left  + window.scrollX)      + 'px';
+  dd.style.top  = (rect.bottom + 4) + 'px';
+  dd.style.left = rect.left + 'px';
   document.body.appendChild(dd); openStatusDD = dd;
 }
 
@@ -286,8 +286,8 @@ function toggleAssignDropdown(btn, animationNo, current) {
     item.onclick = () => { assignEditor(animationNo, e.name, btn); closeAssign(); };
     dd.appendChild(item);
   });
-  dd.style.top  = (rect.bottom + window.scrollY + 4) + 'px';
-  dd.style.left = (rect.left  + window.scrollX)      + 'px';
+  dd.style.top  = (rect.bottom + 4) + 'px';
+  dd.style.left = rect.left + 'px';
   document.body.appendChild(dd); openAssignDD = dd;
 }
 
