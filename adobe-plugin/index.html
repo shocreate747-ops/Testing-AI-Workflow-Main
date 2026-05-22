@@ -6,28 +6,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link id="remote-css" rel="stylesheet" href="" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
-  <!-- Shown only before a backend URL is configured -->
-  <div id="setup-screen" style="display:none;padding:16px;font-family:Inter,Arial,sans-serif;color:#aaa;font-size:12px;">
-    <p style="color:#fff;font-weight:600;margin-bottom:8px;">First-time setup</p>
-    <p style="margin-bottom:10px;color:#777;">Enter your backend URL to connect the plugin.</p>
-    <input id="setup-url" type="text" placeholder="https://your-app.up.railway.app"
-      style="width:100%;background:#1a1a1a;border:1px solid #444;border-radius:4px;color:#ccc;
-             font-size:11px;padding:6px 8px;box-sizing:border-box;margin-bottom:6px;font-family:inherit;" />
-    <button id="setup-save"
-      style="width:100%;background:#2e2e2e;border:1px solid #555;border-radius:4px;color:#aaa;
-             font-size:11px;font-weight:600;padding:6px;cursor:pointer;font-family:inherit;">
-      Connect
-    </button>
-    <p id="setup-err" style="color:#9a4040;margin-top:6px;font-size:10px;"></p>
-  </div>
-
-  <!-- Main app shell — populated by remote main.js -->
-  <div id="app" style="display:none;">
+  <div id="app">
 
     <header>
       <h1>QC Review Tracker</h1>
@@ -78,53 +60,6 @@
   </div>
 
   <script src="js/CSInterface.js"></script>
-  <script>
-    // ── Bootstrap loader ───────────────────────────────────────────────────────
-    // Tries to load main.js from the backend so updates are instant.
-    // Falls back to the local copy if no backend URL is saved yet.
-
-    const STORAGE_KEY = 'qc_api_base';
-
-    function getApiBase() {
-      return (localStorage.getItem(STORAGE_KEY) || '').replace(/\/$/, '');
-    }
-
-    function loadRemote(base) {
-      // Point CSS to remote stylesheet
-      document.getElementById('remote-css').href = base + '/plugin/css/style.css';
-
-      const s = document.createElement('script');
-      s.src = base + '/plugin/js/main.js?v=' + Date.now(); // bust cache
-      s.onerror = loadLocal;
-      document.head.appendChild(s);
-    }
-
-    function loadLocal() {
-      const s = document.createElement('script');
-      s.src = 'js/main.js';
-      document.head.appendChild(s);
-    }
-
-    function showApp()   { document.getElementById('app').style.display = ''; document.getElementById('setup-screen').style.display = 'none'; }
-    function showSetup() { document.getElementById('setup-screen').style.display = ''; document.getElementById('app').style.display = 'none'; }
-
-    const base = getApiBase();
-    if (base) {
-      showApp();
-      loadRemote(base);
-    } else {
-      showSetup();
-      document.getElementById('setup-save').addEventListener('click', () => {
-        const val = document.getElementById('setup-url').value.trim().replace(/\/$/, '');
-        if (!val.startsWith('http')) {
-          document.getElementById('setup-err').textContent = 'Enter a valid URL starting with https://';
-          return;
-        }
-        localStorage.setItem(STORAGE_KEY, val);
-        showApp();
-        loadRemote(val);
-      });
-    }
-  </script>
+  <script src="js/main.js"></script>
 </body>
 </html>

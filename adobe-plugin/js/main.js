@@ -380,4 +380,20 @@ document.getElementById('refreshBtn').addEventListener('click', fetchAnimations)
 document.getElementById('renderBtn').addEventListener('click', startRender);
 filterClear.style.display = 'none';
 fetchAnimations();
-setInterval(fetchAnimations, 30_000);
+
+// Poll every 60s, paused when panel is hidden to reduce AE load
+let fetchTimer = null;
+
+function startPolling() {
+  if (fetchTimer) return;
+  fetchTimer = setInterval(fetchAnimations, 60_000);
+}
+function stopPolling() {
+  if (fetchTimer) { clearInterval(fetchTimer); fetchTimer = null; }
+}
+
+document.addEventListener('visibilitychange', () => {
+  document.hidden ? stopPolling() : (fetchAnimations(), startPolling());
+});
+
+startPolling();
